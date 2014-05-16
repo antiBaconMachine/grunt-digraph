@@ -10,41 +10,54 @@
 
 module.exports = function(grunt) {
 
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
+    var Digraph = require("graphlib").Digraph;
+    var alg  = require("graphlib").alg;
+    var filter = require("graphlib").filter;
 
-  grunt.registerMultiTask('graph_runner', 'The best Grunt plugin ever.', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
-    var options = this.options({
-      punctuation: '.',
-      separator: ', '
+    var _ = require('lodash');
+
+    var taskGraph = new Digraph();
+
+    grunt.registerTask('run-graph', function() {
+        var tasksToRun = _.toArray(arguments);
+        prepareTaskGraph();
+
+//        console.log("tasks to run ", tasksToRun);
+        var allTasks = getAllTasks(tasksToRun);
+//        console.log("all tasks ", allTasks);
+        var computedTasks = alg.topsort(taskGraph.filterNodes(filter.nodesFromList(allTasks)));
+        grunt.task.run(computedTasks);
     });
 
-    // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var src = f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
-        }
-      }).map(function(filepath) {
-        // Read file source.
-        return grunt.file.read(filepath);
-      }).join(grunt.util.normalizelf(options.separator));
+    grunt.graph = function(graph) {
+        _(graph || {}).each(function(node, name) {
+            taskGraph.addNode(name, node);
+        });
+    };
 
-      // Handle options.
-      src += options.punctuation;
+    var prepareTaskGraph = function() {
+        taskGraph.eachNode(function(name, node) {
+            _(node.dependencies || []).each( function(dep) {
+                if (taskGraph.hasNode(dep)) {
+                    taskGraph.addEdge(null, dep, name);
+                } else {
+                    console.error('no task %s was found whilst resolving dependencies of %s', dep, name);
+                }
+            });
 
-      // Write the destination file.
-      grunt.file.write(f.dest, src);
+            grunt.registerTask(name, node.action);
+        });
+    };
 
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
-    });
-  });
+    var getAllTasks = function(tasks, acc) {
+        acc = acc || [];
+        _(tasks || []).each(function(task) {
+           if (!_.contains(acc,task)) {
+               acc.push(task);
+               acc = acc.concat(getAllTasks((taskGraph.predecessors(task)|| []), acc));
+           }
+        });
+        return acc;
+    };
 
 };
