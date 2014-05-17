@@ -23,9 +23,25 @@ module.exports = function(grunt) {
         prepareTaskGraph();
 
 //        console.log("tasks to run ", tasksToRun);
-        var allTasks = getAllTasks(tasksToRun);
+
+        var dij = alg.dijkstraAll(taskGraph);
+//        console.log('dig', dij);
+        var allTasks = [];
+        _.each(dij, function(v, k) {
+//            console.log(_.contains(tasksToRun, k), k);
+            if (_.contains(tasksToRun, k)) {
+                allTasks.push(k);
+                _.each(v, function(val, key) {
+                    if (val.predecessor) {
+                        allTasks.push(key);
+                    }
+                });
+            }
+        });
+
 //        console.log("all tasks ", allTasks);
-        var computedTasks = alg.topsort(taskGraph.filterNodes(filter.nodesFromList(allTasks)));
+        var computedTasks = alg.topsort(taskGraph.filterNodes(filter.nodesFromList(allTasks))).reverse();
+        console.log('computed tasks ', computedTasks);
         grunt.task.run(computedTasks);
     });
 
@@ -39,7 +55,7 @@ module.exports = function(grunt) {
         taskGraph.eachNode(function(name, node) {
             _(node.dependencies || []).each( function(dep) {
                 if (taskGraph.hasNode(dep)) {
-                    taskGraph.addEdge(null, dep, name);
+                    taskGraph.addEdge(null, name, dep);
                 } else {
                     console.error('no task %s was found whilst resolving dependencies of %s', dep, name);
                 }

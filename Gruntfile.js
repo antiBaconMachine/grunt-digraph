@@ -74,18 +74,19 @@ module.exports = function (grunt) {
     console.log(grunt.graph);
     grunt.graph({
         a : {
-            dependencies: ['b', 'bar'],
+            dependencies: ['c', 'bar'],
             action: function() {
                 console.log('AAA');
             }
         },
         b: {
-            dependencies: ['c', 'foo'],
+            dependencies: [ 'foo'],
             action: function() {
                 console.log('BBB');
             }
         },
         c: {
+            dependencies: ['b'],
             action: ['c_log']
         },
         c_log: {
@@ -102,6 +103,18 @@ module.exports = function (grunt) {
             dependencies: ['foo'],
             action: function() {
                 console.log('BAR');
+            }
+        },
+        spam: {
+            dependencies: ['a'],
+            action: function() {
+                console.log('spam');
+            }
+        },
+        eggs: {
+            dependencies: ['c'],
+            action: function() {
+                console.log('eggs');
             }
         }
     });
