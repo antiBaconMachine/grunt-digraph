@@ -65,15 +65,4 @@ module.exports = function(grunt) {
         });
     };
 
-    var getAllTasks = function(tasks, acc) {
-        acc = acc || [];
-        _(tasks || []).each(function(task) {
-           if (!_.contains(acc,task)) {
-               acc.push(task);
-               acc = acc.concat(getAllTasks((taskGraph.predecessors(task)|| []), acc));
-           }
-        });
-        return acc;
-    };
-
 };
