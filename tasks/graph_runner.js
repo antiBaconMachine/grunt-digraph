@@ -22,24 +22,17 @@ module.exports = function(grunt) {
         var tasksToRun = _.toArray(arguments);
         prepareTaskGraph();
 
-//        console.log("tasks to run ", tasksToRun);
-
-        var dij = alg.dijkstraAll(taskGraph);
-//        console.log('dig', dij);
+        console.log("Root tasks to run ", tasksToRun);
         var allTasks = [];
-        _.each(dij, function(v, k) {
-//            console.log(_.contains(tasksToRun, k), k);
-            if (_.contains(tasksToRun, k)) {
-                allTasks.push(k);
-                _.each(v, function(val, key) {
-                    if (val.predecessor) {
-                        allTasks.push(key);
-                    }
-                });
-            }
+        _.each(tasksToRun, function(task) {
+            allTasks.push(task);
+            _.each(alg.dijkstra(taskGraph, task), function(val, key) {
+                if (val.predecessor) {
+                    allTasks.push(key);
+                }
+            });
         });
 
-//        console.log("all tasks ", allTasks);
         var computedTasks = alg.topsort(taskGraph.filterNodes(filter.nodesFromList(allTasks))).reverse();
         console.log('computed tasks ', computedTasks);
         grunt.task.run(computedTasks);
