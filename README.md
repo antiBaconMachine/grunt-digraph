@@ -89,4 +89,4 @@ See [blog post](http://www.abm.io/adding-a-task-graph-to-grunt/ for the reasons 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-0.3.0 Initial npm release
+0.3.1 Initial npm release
