@@ -25,15 +25,15 @@ module.exports = function (grunt) {
         },
 
         graph: {
-            a : {
+            a: {
                 dependencies: ['graph:c', 'graph:bar'],
-                task: function() {
+                task: function () {
                     console.log('AAA');
                 }
             },
             b: {
                 dependencies: [ 'foo'],
-                task: function() {
+                task: function () {
                     console.log('BBB');
                 }
             },
@@ -42,25 +42,25 @@ module.exports = function (grunt) {
                 task: ['graph:c_log']
             },
             c_log: {
-                task: function() {
+                task: function () {
                     console.log('CCC');
                 }
             },
             bar: {
                 dependencies: ['foo'],
-                task: function() {
+                task: function () {
                     console.log('BAR');
                 }
             },
             spam: {
                 dependencies: ['graph:a'],
-                task: function() {
+                task: function () {
                     console.log('spam');
                 }
             },
             eggs: {
                 dependencies: ['graph:c'],
-                task: function() {
+                task: function () {
                     console.log('eggs');
                 }
             }
@@ -81,7 +81,7 @@ module.exports = function (grunt) {
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint']);
 
-    grunt.registerTask('foo', function() {
+    grunt.registerTask('foo', function () {
         console.log('FOO');
     });
 
