@@ -17,14 +17,10 @@ module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        jshint: {
-            all: [
-                'Gruntfile.js',
-                'tasks/*.js',
-                '<%= nodeunit.tests %>'
-            ],
+
+        bump: {
             options: {
-                jshintrc: '.jshintrc'
+                pushTo: 'origin'
             }
         },
 
@@ -32,7 +28,7 @@ module.exports = function (grunt) {
         clean: {
             tests: ['tmp']
         },
-        
+
         graph: {
             a : {
                 dependencies: ['graph:c', 'graph:bar'],
@@ -74,7 +70,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         // Configuration to be run (and then tested).
         graph_runner: {
             default_options: {
@@ -92,6 +87,17 @@ module.exports = function (grunt) {
                 files: {
                     'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
                 }
+            }
+        },
+
+        jshint: {
+            all: [
+                'Gruntfile.js',
+                'tasks/*.js',
+                '<%= nodeunit.tests %>'
+            ],
+            options: {
+                jshintrc: '.jshintrc'
             }
         },
 
