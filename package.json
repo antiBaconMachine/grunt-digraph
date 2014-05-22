@@ -1,7 +1,7 @@
 {
   "name": "grunt-graph-runner",
   "description": "The best Grunt plugin ever.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/antiBaconMachine/grunt-graph-runner",
   "author": {
     "name": "Ollie Edwards",
