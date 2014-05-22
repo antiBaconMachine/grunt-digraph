@@ -80,10 +80,10 @@ module.exports = function (grunt) {
      */
     var getTasksToRun = function () {
         return _.toArray(arguments).map(function (t) {
-            if (!t.indexOf(PREFIX) !== 0) {
+            if (t.indexOf(PREFIX) !== 0) {
                 t = PREFIX + t;
             }
             return t;
         });
-    }
+    };
 };
