@@ -32,6 +32,48 @@ module.exports = function (grunt) {
         clean: {
             tests: ['tmp']
         },
+        
+        graph: {
+            a : {
+                dependencies: ['graph:c', 'graph:bar'],
+                task: function() {
+                    console.log('AAA');
+                }
+            },
+            b: {
+                dependencies: [ 'foo'],
+                task: function() {
+                    console.log('BBB');
+                }
+            },
+            c: {
+                dependencies: ['graph:b'],
+                task: ['graph:c_log']
+            },
+            c_log: {
+                task: function() {
+                    console.log('CCC');
+                }
+            },
+            bar: {
+                dependencies: ['foo'],
+                task: function() {
+                    console.log('BAR');
+                }
+            },
+            spam: {
+                dependencies: ['graph:a'],
+                task: function() {
+                    console.log('spam');
+                }
+            },
+            eggs: {
+                dependencies: ['graph:c'],
+                task: function() {
+                    console.log('eggs');
+                }
+            }
+        },
 
         // Configuration to be run (and then tested).
         graph_runner: {
@@ -60,10 +102,6 @@ module.exports = function (grunt) {
 
     });
 
-
-
-
-
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.
     grunt.registerTask('test', ['clean', 'graph_runner', 'nodeunit']);
@@ -71,54 +109,8 @@ module.exports = function (grunt) {
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint']);
 
-    console.log(grunt.graph);
-    grunt.graph({
-        a : {
-            dependencies: ['c', 'bar'],
-            action: function() {
-                console.log('AAA');
-            }
-        },
-        b: {
-            dependencies: [ 'foo'],
-            action: function() {
-                console.log('BBB');
-            }
-        },
-        c: {
-            dependencies: ['b'],
-            action: ['c_log']
-        },
-        c_log: {
-            action: function() {
-                console.log('CCC');
-            }
-        },
-        foo: {
-            action: function() {
-                console.log('FOO');
-            }
-        },
-        bar: {
-            dependencies: ['foo'],
-            action: function() {
-                console.log('BAR');
-            }
-        },
-        spam: {
-            dependencies: ['a'],
-            action: function() {
-                console.log('spam');
-            }
-        },
-        eggs: {
-            dependencies: ['c'],
-            action: function() {
-                console.log('eggs');
-            }
-        }
+    grunt.registerTask('foo', function() {
+        console.log('FOO');
     });
-
-
 
 };
