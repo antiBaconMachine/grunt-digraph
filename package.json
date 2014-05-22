@@ -32,7 +32,7 @@
     "grunt-contrib-nodeunit": "^0.3.3",
     "grunt": "~0.4.5",
     "load-grunt-tasks": "~0.4.0",
-    "grunt-bump": "0.0.14"
+    "grunt-bump": "0.0.13"
   },
   "peerDependencies": {
     "grunt": "~0.4.5"
